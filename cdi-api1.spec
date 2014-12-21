@@ -6,9 +6,9 @@
 
 Name:             cdi-api1
 Version:          1.0
-Release:          11%{namedreltag}.0%{?dist}
+Release:          15%{namedreltag}.1
 Summary:          CDI API 1.0
-
+Group:            Development/Java
 License:          ASL 2.0
 URL:              http://seamframework.org/Weld
 
@@ -36,13 +36,6 @@ BuildRequires:    geronimo-parent-poms
 BuildRequires:    weld-parent
 BuildRequires:    jpackage-utils
 
-Requires:         jpackage-utils
-Requires:         java
-Requires:         jboss-el-2.2-api
-Requires:         jboss-interceptors-1.1-api
-Requires:         jboss-ejb-3.1-api
-Requires:         geronimo-annotation
-
 %description
 APIs for JSR-299: Contexts and Dependency Injection for Java EE
 
@@ -51,8 +44,7 @@ Summary:          Javadocs for %{name}
 
 %description javadoc
 This package contains the API documentation for %{name}.
-
-Requires:         jpackage-utils
+Group:            Documentation
 
 %prep
 %setup -q -n cdi-api-%{namedversion}
@@ -60,35 +52,32 @@ Requires:         jpackage-utils
 cp %{SOURCE1} .
 
 %build
-mvn-rpmbuild install javadoc:aggregate
+%mvn_compat_version : %{namedversion} %{upstreamversion} %{version} 1
+%mvn_build
 
 %install
-install -d -m 755 %{buildroot}%{_javadir}/%{name}
-install -d -m 755 %{buildroot}%{_mavenpomdir}
-install -d -m 755 %{buildroot}%{_javadocdir}/%{name}
+%mvn_install
 
-# JAR
-install -pm 644 target/cdi-api-%{upstreamversion}.jar %{buildroot}%{_javadir}/%{name}/%{name}.jar
-
-# POM
-install -pm 644 pom.xml %{buildroot}%{_mavenpomdir}/JPP.%{name}-%{name}.pom
-
-%add_maven_depmap JPP.%{name}-%{name}.pom %{name}/%{name}.jar -v "1,%{upstreamversion}"
-
-# JAVADOC
-cp -rp target/site/apidocs/* %{buildroot}%{_javadocdir}/%{name}
-
-%files
-%{_mavenpomdir}/*
-%{_mavendepmapfragdir}/*
-%{_javadir}/*
+%files -f .mfiles
+%dir %{_javadir}/%{name}
 %doc LICENSE-2.0.txt
 
-%files javadoc
-%{_javadocdir}/%{name}
+%files javadoc -f .mfiles-javadoc
 %doc LICENSE-2.0.txt
 
 %changelog
+* Mon Jul 07 2014 Marek Goldmann <mgoldman@redhat.com> - 1.0-15.SP4
+- Add compat versions
+
+* Mon Jul 07 2014 Marek Goldmann <mgoldman@redhat.com> - 1.0-14.SP4
+- Switch to xmvn
+
+* Sat Jun 07 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.0-13.SP4
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
+
+* Fri Mar 28 2014 Michael Simacek <msimacek@redhat.com> - 1.0-12.SP4
+- Use Requires: java-headless rebuild (#1067528)
+
 * Sat Aug 03 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.0-11.SP4
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_20_Mass_Rebuild
 
@@ -124,4 +113,5 @@ cp -rp target/site/apidocs/* %{buildroot}%{_javadocdir}/%{name}
 
 * Mon Feb 20 2012 Marek Goldmann <mgoldman@redhat.com> 1.0-1.SP4
 - Initial packaging
+
 
