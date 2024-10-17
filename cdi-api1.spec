@@ -10,7 +10,7 @@ Release:          15%{namedreltag}.1
 Summary:          CDI API 1.0
 Group:            Development/Java
 License:          ASL 2.0
-URL:              http://seamframework.org/Weld
+URL:              https://seamframework.org/Weld
 
 # svn export http://anonsvn.jboss.org/repos/weld/cdi-api/tags/1.0-SP4/ cdi-api-1.0.SP4
 # tar cafJ cdi-api-1.0.SP4.tar.xz cdi-api-1.0.SP4
